@@ -1,32 +1,159 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Doodle After Dark</title>
+  <title>The Last Doodle</title>
+
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
+      overflow: hidden;
       background: #050505;
-      color: white;
       font-family: Arial, sans-serif;
+      color: white;
+    }
+
+    #game {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      background:
+        radial-gradient(circle at center, #292929 0%, #111 45%, #020202 100%);
+    }
+
+    /* Doodle walls */
+    .wall {
+      position: absolute;
+      background: #181818;
+      border: 4px solid #777;
+      box-shadow: 0 0 20px #000;
+    }
+
+    .wall.left {
+      width: 18vw;
+      height: 100vh;
+      left: 0;
+      top: 0;
+      transform: skewY(8deg);
+    }
+
+    .wall.right {
+      width: 18vw;
+      height: 100vh;
+      right: 0;
+      top: 0;
+      transform: skewY(-8deg);
+    }
+
+    /* Floor */
+    #floor {
+      position: absolute;
+      bottom: 0;
+      left: 10%;
+      width: 80%;
+      height: 45%;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          #151515 0px,
+          #151515 38px,
+          #222 40px
+        );
+      transform: perspective(400px) rotateX(35deg);
+      transform-origin: bottom;
+      border-top: 3px solid #666;
+    }
+
+    /* Crosshair */
+    #crosshair {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 18px;
+      height: 18px;
+      transform: translate(-50%, -50%);
+    }
+
+    #crosshair::before,
+    #crosshair::after {
+      content: "";
+      position: absolute;
+      background: #fff;
+      box-shadow: 0 0 6px #fff;
+    }
+
+    #crosshair::before {
+      width: 18px;
+      height: 2px;
+      top: 8px;
+    }
+
+    #crosshair::after {
+      width: 2px;
+      height: 18px;
+      left: 8px;
+    }
+
+    /* HUD */
+    #hud {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 18px;
+      text-shadow: 0 0 8px black;
+    }
+
+    #title {
+      position: absolute;
+      bottom: 30px;
+      width: 100%;
       text-align: center;
-      padding-top: 100px;
-    }
-
-    h1 {
-      color: #ff1744;
-      font-size: 50px;
-    }
-
-    p {
       color: #aaa;
-      font-size: 20px;
+      letter-spacing: 5px;
+      font-size: 14px;
+    }
+
+    #warning {
+      position: absolute;
+      top: 45%;
+      width: 100%;
+      text-align: center;
+      color: #8b0000;
+      font-size: 26px;
+      opacity: 0.7;
+      text-shadow: 0 0 15px red;
     }
   </style>
 </head>
 
 <body>
-  <h1>DOODLE AFTER DARK</h1>
-  <p>The nightmare has begun...</p>
+
+  <div id="game">
+
+    <div class="wall left"></div>
+    <div class="wall right"></div>
+
+    <div id="floor"></div>
+
+    <div id="crosshair"></div>
+
+    <div id="hud">
+      HEALTH: 100<br>
+      INK: 100
+    </div>
+
+    <div id="warning">
+      Something is watching...
+    </div>
+
+    <div id="title">
+      THE LAST DOODLE
+    </div>
+
+  </div>
+
 </body>
 </html>
-
