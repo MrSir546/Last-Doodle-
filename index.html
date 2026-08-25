@@ -2400,3 +2400,70 @@ init();
 
 </body>
 </html>
+document.getElementById("play").addEventListener("click", function () {
+
+    console.log("ASHFALL STARTING...");
+
+    // Start game
+    started = true;
+    paused = false;
+    dead = false;
+
+    // Hide menu
+    const menu = document.getElementById("menu");
+    if (menu) {
+        menu.style.display = "none";
+    }
+
+    // Show HUD
+    const hud = document.getElementById("hud");
+    if (hud) {
+        hud.style.display = "block";
+    }
+
+    // Reset player stats
+    health = 100;
+    stamina = 100;
+
+    // Reset player position
+    if (player) {
+        player.position.set(
+            0,
+            terrainHeight(0, 20) + 1.7,
+            20
+        );
+    }
+
+    // Reset camera
+    yaw = 0;
+    pitch = 0;
+
+    if (player) {
+        player.rotation.y = 0;
+    }
+
+    if (camera) {
+        camera.rotation.x = 0;
+    }
+
+    // Update HUD
+    if (typeof updateUI === "function") {
+        updateUI();
+    }
+
+    // Start mouse control
+    if (
+        renderer &&
+        renderer.domElement &&
+        renderer.domElement.requestPointerLock
+    ) {
+        renderer.domElement.requestPointerLock();
+    }
+
+    // Welcome message
+    if (typeof showMessage === "function") {
+        showMessage("WELCOME TO ASHFALL");
+    }
+
+    console.log("ASHFALL STARTED!");
+});
