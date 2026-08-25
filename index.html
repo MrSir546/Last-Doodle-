@@ -8,98 +8,92 @@
 <style>
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    user-select: none;
 }
 
 html, body {
+    margin: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
     background: #050505;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Arial, sans-serif;
 }
 
 canvas {
     display: block;
 }
 
-/* =========================
-   START SCREEN
-========================= */
+/* START SCREEN */
 
 #startScreen {
     position: fixed;
     inset: 0;
-    z-index: 100;
+    z-index: 1000;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     background:
-        radial-gradient(circle at center, rgba(100,35,20,.25), transparent 45%),
-        linear-gradient(#080808, #150a07);
+        radial-gradient(circle at 50% 45%, #35130b 0%, #100706 35%, #030303 80%);
     color: white;
 }
 
-#startContent {
+.menu {
     text-align: center;
-    width: min(700px, 90%);
+    width: 90%;
+    max-width: 700px;
 }
 
-.logo {
-    font-size: clamp(60px, 12vw, 140px);
+.title {
+    font-size: clamp(60px, 12vw, 130px);
     font-weight: 900;
-    letter-spacing: 18px;
-    color: #eee;
+    letter-spacing: 15px;
     text-shadow:
-        0 0 10px #ff5b2e,
-        0 0 35px #ff2e00;
-    margin-bottom: 5px;
+        0 0 10px #ff542e,
+        0 0 30px #ff542e;
 }
 
-.subtitle {
+.tagline {
+    margin-top: -10px;
     color: #aaa;
-    letter-spacing: 8px;
-    font-size: 14px;
-    margin-bottom: 50px;
+    letter-spacing: 6px;
+    font-size: 13px;
+    margin-bottom: 45px;
 }
 
-.startButton {
+.menuButton {
+    display: block;
     width: 280px;
-    padding: 18px;
+    margin: 12px auto;
+    padding: 17px;
     border: 1px solid #ff542e;
-    background: rgba(255, 70, 30, .08);
+    background: rgba(255, 84, 46, 0.08);
     color: white;
-    font-size: 22px;
+    font-size: 19px;
     font-weight: bold;
     letter-spacing: 4px;
     cursor: pointer;
-    transition: .2s;
 }
 
-.startButton:hover {
+.menuButton:hover {
     background: #ff542e;
-    color: #111;
-    box-shadow: 0 0 30px #ff542e;
+    color: black;
 }
 
 .controls {
     margin-top: 30px;
     color: #777;
-    line-height: 2;
     font-size: 13px;
+    line-height: 2;
 }
 
-/* =========================
-   HUD
-========================= */
+/* HUD */
 
 #hud {
     position: fixed;
     inset: 0;
+    z-index: 100;
     pointer-events: none;
-    z-index: 20;
+    display: none;
     color: white;
 }
 
@@ -107,65 +101,63 @@ canvas {
     position: absolute;
     left: 50%;
     top: 50%;
+    width: 18px;
+    height: 18px;
     transform: translate(-50%, -50%);
-    width: 20px;
-    height: 20px;
 }
 
 #crosshair::before,
 #crosshair::after {
     content: "";
     position: absolute;
-    background: rgba(255,255,255,.9);
+    background: white;
 }
 
 #crosshair::before {
     width: 2px;
-    height: 20px;
-    left: 9px;
+    height: 18px;
+    left: 8px;
 }
 
 #crosshair::after {
-    width: 20px;
+    width: 18px;
     height: 2px;
-    top: 9px;
+    top: 8px;
 }
 
-#bottomLeft {
+#stats {
     position: absolute;
-    left: 25px;
     bottom: 25px;
-    width: 260px;
+    left: 25px;
+    width: 280px;
 }
 
-.statLabel {
+.label {
+    color: #bbb;
     font-size: 11px;
     letter-spacing: 2px;
-    color: #aaa;
     margin-bottom: 5px;
 }
 
 .bar {
-    width: 260px;
+    width: 280px;
     height: 16px;
-    background: rgba(0,0,0,.65);
+    background: #111;
     border: 1px solid #555;
     margin-bottom: 12px;
 }
 
-.barInner {
+.barFill {
     height: 100%;
     width: 100%;
-    transition: width .15s;
 }
 
-#healthBar {
-    background: #d83227;
-    box-shadow: 0 0 10px #d83227;
+#healthFill {
+    background: #d9362b;
 }
 
-#staminaBar {
-    background: #d6a72e;
+#staminaFill {
+    background: #d69c2e;
 }
 
 #ammo {
@@ -174,12 +166,15 @@ canvas {
     bottom: 25px;
     font-size: 42px;
     font-weight: bold;
-    text-shadow: 0 2px 5px black;
+}
+
+#ammo span {
+    color: white;
 }
 
 #ammo small {
-    font-size: 16px;
-    color: #aaa;
+    color: #777;
+    font-size: 18px;
 }
 
 #objective {
@@ -187,107 +182,96 @@ canvas {
     top: 25px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0,0,0,.55);
     padding: 12px 22px;
+    background: rgba(0,0,0,.6);
     border-left: 3px solid #ff542e;
-    font-size: 14px;
-    letter-spacing: 1px;
+    font-size: 13px;
 }
 
-#lootMessage {
+#message {
     position: absolute;
-    top: 100px;
+    top: 90px;
     left: 50%;
     transform: translateX(-50%);
-    color: #ffd66b;
+    color: #ffbd4a;
     font-weight: bold;
     opacity: 0;
-    transition: .3s;
 }
 
-/* =========================
-   DAMAGE EFFECT
-========================= */
+/* DAMAGE */
 
-#damageFlash {
+#damage {
     position: fixed;
     inset: 0;
-    z-index: 19;
-    pointer-events: none;
     background: rgba(255,0,0,.25);
     opacity: 0;
+    pointer-events: none;
+    z-index: 200;
 }
 
-/* =========================
-   PAUSE
-========================= */
+/* PAUSE / DEATH */
 
-#pauseScreen,
-#deadScreen {
+.overlay {
     position: fixed;
     inset: 0;
-    z-index: 90;
-    background: rgba(0,0,0,.8);
+    z-index: 500;
     display: none;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,.8);
     color: white;
     text-align: center;
 }
 
-.pauseBox {
+.overlayBox {
     padding: 50px;
-    border: 1px solid #555;
-    background: rgba(10,10,10,.9);
+    background: #0c0c0c;
+    border: 1px solid #444;
 }
 
-.pauseBox h1 {
-    font-size: 50px;
+.overlay h1 {
+    font-size: 55px;
     letter-spacing: 8px;
+    margin: 0 0 20px;
+}
+
+.overlay p {
+    color: #888;
     margin-bottom: 25px;
 }
 
-.pauseBox p {
-    color: #aaa;
-    margin-bottom: 25px;
-}
-
-#deadScreen h1 {
-    color: #d83227;
-    font-size: 70px;
-    letter-spacing: 10px;
+#deathScreen h1 {
+    color: #d9362b;
 }
 </style>
 </head>
 
 <body>
 
-<!-- =========================
+<!-- ==============================
      START SCREEN
-========================= -->
+================================ -->
 
 <div id="startScreen">
 
-    <div id="startContent">
+    <div class="menu">
 
-        <div class="logo">ASHFALL</div>
+        <div class="title">ASHFALL</div>
 
-        <div class="subtitle">
+        <div class="tagline">
             THE WORLD ENDED. YOU DIDN'T.
         </div>
 
-        <button class="startButton" id="playButton">
+        <button class="menuButton" id="playButton">
             PLAY
         </button>
 
-        <br><br>
-
-        <button class="startButton" id="fullscreenButton">
+        <button class="menuButton" id="fullscreenButton">
             FULLSCREEN
         </button>
 
         <div class="controls">
-            WASD — MOVE<br>
+            W A S D — MOVE<br>
             SHIFT — SPRINT<br>
             MOUSE — LOOK<br>
             LEFT CLICK — SHOOT<br>
@@ -299,9 +283,10 @@ canvas {
 
 </div>
 
-<!-- =========================
+
+<!-- ==============================
      HUD
-========================= -->
+================================ -->
 
 <div id="hud">
 
@@ -309,50 +294,58 @@ canvas {
         SEARCH THE RUINS
     </div>
 
-    <div id="lootMessage">
-        LOOT FOUND
-    </div>
+    <div id="message"></div>
 
     <div id="crosshair"></div>
 
-    <div id="bottomLeft">
+    <div id="stats">
 
-        <div class="statLabel">HEALTH</div>
+        <div class="label">HEALTH</div>
 
         <div class="bar">
-            <div class="barInner" id="healthBar"></div>
+            <div
+                id="healthFill"
+                class="barFill">
+            </div>
         </div>
 
-        <div class="statLabel">STAMINA</div>
+        <div class="label">STAMINA</div>
 
         <div class="bar">
-            <div class="barInner" id="staminaBar"></div>
+            <div
+                id="staminaFill"
+                class="barFill">
+            </div>
         </div>
 
     </div>
 
     <div id="ammo">
-        <span id="ammoCurrent">12</span>
+        <span id="ammoNumber">12</span>
         <small>/ 120</small>
     </div>
 
 </div>
 
-<div id="damageFlash"></div>
 
-<!-- =========================
+<div id="damage"></div>
+
+
+<!-- ==============================
      PAUSE
-========================= -->
+================================ -->
 
-<div id="pauseScreen">
+<div id="pauseScreen" class="overlay">
 
-    <div class="pauseBox">
+    <div class="overlayBox">
 
         <h1>PAUSED</h1>
 
-        <p>Press ESC to continue</p>
+        <p>Press ESC or click resume</p>
 
-        <button class="startButton" id="resumeButton">
+        <button
+            class="menuButton"
+            id="resumeButton">
             RESUME
         </button>
 
@@ -360,25 +353,29 @@ canvas {
 
 </div>
 
-<!-- =========================
-     DEAD
-========================= -->
 
-<div id="deadScreen">
+<!-- ==============================
+     DEATH
+================================ -->
 
-    <div class="pauseBox">
+<div id="deathScreen" class="overlay">
+
+    <div class="overlayBox">
 
         <h1>YOU DIED</h1>
 
         <p>The ashes claimed another survivor.</p>
 
-        <button class="startButton" id="restartButton">
+        <button
+            class="menuButton"
+            id="restartButton">
             TRY AGAIN
         </button>
 
     </div>
 
 </div>
+
 
 <!-- THREE.JS -->
 
@@ -388,13 +385,9 @@ canvas {
 
 /* ============================================================
    ASHFALL
-   Single-file FPS prototype
    ============================================================ */
 
-
-/* =========================
-   GAME VARIABLES
-========================= */
+/* GAME */
 
 let scene;
 let camera;
@@ -402,11 +395,10 @@ let renderer;
 let clock;
 
 let player;
-let gun;
 
-let started = false;
-let paused = false;
-let dead = false;
+let gameStarted = false;
+let gamePaused = false;
+let playerDead = false;
 
 let health = 100;
 let stamina = 100;
@@ -417,80 +409,97 @@ let reserveAmmo = 120;
 let yaw = 0;
 let pitch = 0;
 
+let shootTimer = 0;
+let reloadTimer = 0;
+let reloading = false;
+
+let worldTimer = 0;
+
 const keys = {};
 
-let enemies = [];
-let crates = [];
-let bullets = [];
-
-let shootCooldown = 0;
-let reloadTimer = 0;
-let isReloading = false;
-
-let worldTime = 0;
+const enemies = [];
+const loot = [];
 
 
-/* =========================
-   HTML ELEMENTS
-========================= */
+/* HTML */
 
-const startScreen = document.getElementById("startScreen");
-const playButton = document.getElementById("playButton");
-const fullscreenButton = document.getElementById("fullscreenButton");
+const startScreen =
+    document.getElementById("startScreen");
 
-const healthBar = document.getElementById("healthBar");
-const staminaBar = document.getElementById("staminaBar");
+const playButton =
+    document.getElementById("playButton");
 
-const ammoCurrent = document.getElementById("ammoCurrent");
+const fullscreenButton =
+    document.getElementById("fullscreenButton");
 
-const pauseScreen = document.getElementById("pauseScreen");
-const resumeButton = document.getElementById("resumeButton");
+const hud =
+    document.getElementById("hud");
 
-const deadScreen = document.getElementById("deadScreen");
-const restartButton = document.getElementById("restartButton");
+const healthFill =
+    document.getElementById("healthFill");
 
-const damageFlash = document.getElementById("damageFlash");
-const lootMessage = document.getElementById("lootMessage");
+const staminaFill =
+    document.getElementById("staminaFill");
+
+const ammoNumber =
+    document.getElementById("ammoNumber");
+
+const pauseScreen =
+    document.getElementById("pauseScreen");
+
+const deathScreen =
+    document.getElementById("deathScreen");
+
+const resumeButton =
+    document.getElementById("resumeButton");
+
+const restartButton =
+    document.getElementById("restartButton");
+
+const damageScreen =
+    document.getElementById("damage");
+
+const message =
+    document.getElementById("message");
 
 
-/* =========================
+/* ============================================================
    INITIALIZE
-========================= */
+   ============================================================ */
 
 function init() {
 
     scene = new THREE.Scene();
 
-    scene.background = new THREE.Color(0x15110f);
+    scene.background =
+        new THREE.Color(0x090909);
 
-    scene.fog = new THREE.Fog(
-        0x15110f,
-        20,
-        180
-    );
+    scene.fog =
+        new THREE.Fog(
+            0x090909,
+            20,
+            180
+        );
 
 
     /* CAMERA */
 
-    camera = new THREE.PerspectiveCamera(
-        75,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        500
-    );
-
-    camera.position.set(
-        0,
-        2,
-        10
-    );
+    camera =
+        new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth /
+            window.innerHeight,
+            0.1,
+            500
+        );
 
 
     /* RENDERER */
 
-    renderer = new THREE.WebGLRenderer({
-        antialias: true
-    });
+    renderer =
+        new THREE.WebGLRenderer({
+            antialias: true
+        });
 
     renderer.setSize(
         window.innerWidth,
@@ -498,29 +507,33 @@ function init() {
     );
 
     renderer.setPixelRatio(
-        Math.min(window.devicePixelRatio, 2)
+        Math.min(
+            window.devicePixelRatio,
+            2
+        )
     );
 
     renderer.shadowMap.enabled = true;
 
-    document.body.appendChild(renderer.domElement);
+    document.body.appendChild(
+        renderer.domElement
+    );
 
 
     /* CLOCK */
 
-    clock = new THREE.Clock();
+    clock =
+        new THREE.Clock();
 
 
-    /* LIGHTING */
+    /* LIGHTS */
 
-    createLighting();
+    setupLights();
 
 
     /* WORLD */
 
     createGround();
-
-    createRoads();
 
     createBuildings();
 
@@ -528,132 +541,121 @@ function init() {
 
     createCrates();
 
-    createEnemies();
-
 
     /* PLAYER */
 
-    createPlayerGun();
+    createPlayer();
+
+
+    /* ENEMIES */
+
+    spawnEnemies(10);
 
 
     /* EVENTS */
 
     window.addEventListener(
         "resize",
-        onResize
+        resize
     );
 
     document.addEventListener(
         "keydown",
-        onKeyDown
+        keyDown
     );
 
     document.addEventListener(
         "keyup",
-        onKeyUp
+        keyUp
     );
 
     document.addEventListener(
         "mousemove",
-        onMouseMove
+        mouseMove
     );
 
     document.addEventListener(
         "mousedown",
-        onMouseDown
+        mouseDown
     );
 
     document.addEventListener(
-        "mouseup",
-        onMouseUp
-    );
-
-    renderer.domElement.addEventListener(
-        "click",
-        requestPointerLock
+        "pointerlockchange",
+        pointerLockChanged
     );
 
 
-    /* START */
+    /* BUTTONS */
 
-    playButton.addEventListener(
-        "click",
-        startGame
-    );
+    playButton.onclick =
+        startGame;
 
-    fullscreenButton.addEventListener(
-        "click",
-        fullscreen
-    );
+    fullscreenButton.onclick =
+        toggleFullscreen;
 
-    resumeButton.addEventListener(
-        "click",
-        resumeGame
-    );
+    resumeButton.onclick =
+        resumeGame;
 
-    restartButton.addEventListener(
-        "click",
-        restartGame
-    );
+    restartButton.onclick =
+        restartGame;
 
 
     animate();
 }
 
 
-/* =========================
+/* ============================================================
    LIGHTING
-========================= */
+   ============================================================ */
 
-function createLighting() {
+function setupLights() {
 
-    const ambient = new THREE.AmbientLight(
-        0x888888,
-        1.2
-    );
+    const ambient =
+        new THREE.AmbientLight(
+            0x888888,
+            1.5
+        );
 
     scene.add(ambient);
 
 
-    const moon = new THREE.DirectionalLight(
-        0x8899bb,
-        1.5
-    );
+    const moon =
+        new THREE.DirectionalLight(
+            0x8b9fc4,
+            1.8
+        );
 
     moon.position.set(
-        -50,
+        -80,
         100,
-        -30
+        -60
     );
 
     moon.castShadow = true;
 
-    moon.shadow.mapSize.width = 2048;
-    moon.shadow.mapSize.height = 2048;
-
     scene.add(moon);
 
 
-    const fireLight = new THREE.PointLight(
-        0xff522e,
-        2,
-        35
-    );
+    const orange =
+        new THREE.PointLight(
+            0xff542e,
+            3,
+            45
+        );
 
-    fireLight.position.set(
+    orange.position.set(
         0,
         5,
         0
     );
 
-    scene.add(fireLight);
-
+    scene.add(orange);
 }
 
 
-/* =========================
+/* ============================================================
    GROUND
-========================= */
+   ============================================================ */
 
 function createGround() {
 
@@ -665,7 +667,7 @@ function createGround() {
 
     const material =
         new THREE.MeshStandardMaterial({
-            color: 0x282521,
+            color: 0x252321,
             roughness: 1
         });
 
@@ -681,85 +683,46 @@ function createGround() {
     ground.receiveShadow = true;
 
     scene.add(ground);
-
 }
 
 
-/* =========================
-   ROADS
-========================= */
-
-function createRoads() {
-
-    for (
-        let i = -150;
-        i <= 150;
-        i += 30
-    ) {
-
-        const geometry =
-            new THREE.PlaneGeometry(
-                12,
-                400
-            );
-
-        const material =
-            new THREE.MeshStandardMaterial({
-                color: 0x181818
-            });
-
-        const road =
-            new THREE.Mesh(
-                geometry,
-                material
-            );
-
-        road.rotation.x =
-            -Math.PI / 2;
-
-        road.position.x = i;
-
-        road.position.y = 0.01;
-
-        scene.add(road);
-
-
-        const road2 =
-            road.clone();
-
-        road2.rotation.z =
-            Math.PI / 2;
-
-        road2.position.x = 0;
-        road2.position.z = i;
-
-        scene.add(road2);
-
-    }
-
-}
-
-
-/* =========================
+/* ============================================================
    BUILDINGS
-========================= */
+   ============================================================ */
 
 function createBuildings() {
 
     for (
         let i = 0;
-        i < 45;
+        i < 35;
         i++
     ) {
 
-        const width =
-            8 + Math.random() * 12;
+        let x =
+            (Math.random() - .5) * 320;
 
-        const height =
-            5 + Math.random() * 20;
+        let z =
+            (Math.random() - .5) * 320;
+
+
+        if (
+            Math.abs(x) < 25 &&
+            Math.abs(z) < 25
+        ) {
+
+            x += 50;
+
+        }
+
+
+        const width =
+            7 + Math.random() * 10;
 
         const depth =
-            8 + Math.random() * 12;
+            7 + Math.random() * 10;
+
+        const height =
+            5 + Math.random() * 18;
 
 
         const geometry =
@@ -774,12 +737,9 @@ function createBuildings() {
             new THREE.MeshStandardMaterial({
                 color:
                     new THREE.Color(
-                        0.08 +
-                        Math.random() * 0.08,
-                        0.07 +
-                        Math.random() * 0.07,
-                        0.06 +
-                        Math.random() * 0.06
+                        .08 + Math.random() * .07,
+                        .07 + Math.random() * .06,
+                        .06 + Math.random() * .05
                     )
             });
 
@@ -791,30 +751,6 @@ function createBuildings() {
             );
 
 
-        let x =
-            (Math.random() - .5)
-            * 300;
-
-        let z =
-            (Math.random() - .5)
-            * 300;
-
-
-        /*
-         Avoid spawning buildings
-         too close to the player.
-        */
-
-        if (
-            Math.abs(x) < 25 &&
-            Math.abs(z) < 25
-        ) {
-
-            x += 50;
-
-        }
-
-
         building.position.set(
             x,
             height / 2,
@@ -823,25 +759,23 @@ function createBuildings() {
 
 
         building.castShadow = true;
+
         building.receiveShadow = true;
 
-
         scene.add(building);
-
     }
-
 }
 
 
-/* =========================
+/* ============================================================
    TREES
-========================= */
+   ============================================================ */
 
 function createTrees() {
 
     for (
         let i = 0;
-        i < 80;
+        i < 70;
         i++
     ) {
 
@@ -849,51 +783,33 @@ function createTrees() {
             new THREE.Group();
 
 
-        const trunkGeometry =
-            new THREE.CylinderGeometry(
-                .4,
-                .7,
-                5,
-                7
-            );
-
-
-        const trunkMaterial =
-            new THREE.MeshStandardMaterial({
-                color: 0x211813
-            });
-
-
         const trunk =
             new THREE.Mesh(
-                trunkGeometry,
-                trunkMaterial
+                new THREE.CylinderGeometry(
+                    .35,
+                    .55,
+                    5,
+                    7
+                ),
+                new THREE.MeshStandardMaterial({
+                    color: 0x241914
+                })
             );
-
 
         trunk.position.y = 2.5;
 
 
-        const leavesGeometry =
-            new THREE.ConeGeometry(
-                3,
-                7,
-                7
-            );
-
-
-        const leavesMaterial =
-            new THREE.MeshStandardMaterial({
-                color: 0x151c15
-            });
-
-
         const leaves =
             new THREE.Mesh(
-                leavesGeometry,
-                leavesMaterial
+                new THREE.ConeGeometry(
+                    3,
+                    7,
+                    7
+                ),
+                new THREE.MeshStandardMaterial({
+                    color: 0x142016
+                })
             );
-
 
         leaves.position.y = 7;
 
@@ -902,90 +818,87 @@ function createTrees() {
         group.add(leaves);
 
 
-        group.position.x =
-            (Math.random() - .5) * 300;
-
-        group.position.z =
-            (Math.random() - .5) * 300;
+        group.position.set(
+            (Math.random() - .5) * 350,
+            0,
+            (Math.random() - .5) * 350
+        );
 
 
         scene.add(group);
-
     }
-
 }
 
 
-/* =========================
-   CRATES / LOOT
-========================= */
+/* ============================================================
+   LOOT CRATES
+   ============================================================ */
 
 function createCrates() {
 
     for (
         let i = 0;
-        i < 25;
+        i < 20;
         i++
     ) {
 
-        const geometry =
-            new THREE.BoxGeometry(
-                1.8,
-                1.8,
-                1.8
-            );
-
-
-        const material =
-            new THREE.MeshStandardMaterial({
-                color: 0x72502d
-            });
-
-
-        const crate =
-            new THREE.Mesh(
-                geometry,
-                material
-            );
-
-
-        crate.position.set(
-            (Math.random() - .5) * 250,
-            .9,
-            (Math.random() - .5) * 250
-        );
-
-
-        crate.castShadow = true;
-
-        crate.userData.opened = false;
-
-        scene.add(crate);
-
-        crates.push(crate);
-
+        createLootCrate();
     }
-
 }
 
 
-/* =========================
-   PLAYER
-========================= */
+function createLootCrate() {
 
-function createPlayerGun() {
+    const crate =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                1.6,
+                1.6,
+                1.6
+            ),
+            new THREE.MeshStandardMaterial({
+                color: 0x79552f
+            })
+        );
+
+
+    crate.position.set(
+        (Math.random() - .5) * 300,
+        .8,
+        (Math.random() - .5) * 300
+    );
+
+
+    crate.userData.type =
+        "crate";
+
+
+    scene.add(crate);
+
+    loot.push(crate);
+}
+
+
+/* ============================================================
+   PLAYER
+   ============================================================ */
+
+function createPlayer() {
 
     player =
-        new THREE.Group();
+        new THREE.Object3D();
+
+    player.position.set(
+        0,
+        0,
+        15
+    );
 
     scene.add(player);
 
 
-    /*
-    Camera is attached to player.
-    */
-
     player.add(camera);
+
 
     camera.position.set(
         0,
@@ -994,53 +907,45 @@ function createPlayerGun() {
     );
 
 
-    /*
-    Simple weapon model.
-    */
+    /* GUN */
 
-    gun =
+    const gun =
         new THREE.Group();
 
 
-    const bodyGeometry =
-        new THREE.BoxGeometry(
-            .3,
-            .25,
-            1.2
-        );
-
-
-    const bodyMaterial =
-        new THREE.MeshStandardMaterial({
-            color: 0x171717,
-            metalness: .7,
-            roughness: .3
-        });
-
-
-    const body =
+    const gunBody =
         new THREE.Mesh(
-            bodyGeometry,
-            bodyMaterial
+            new THREE.BoxGeometry(
+                .3,
+                .25,
+                1.2
+            ),
+            new THREE.MeshStandardMaterial({
+                color: 0x151515,
+                metalness: .8
+            })
         );
 
 
-    body.position.z = -.6;
-
-
-    const barrelGeometry =
-        new THREE.CylinderGeometry(
-            .07,
-            .07,
-            .8,
-            12
-        );
+    gunBody.position.set(
+        .45,
+        -.4,
+        -.8
+    );
 
 
     const barrel =
         new THREE.Mesh(
-            barrelGeometry,
-            bodyMaterial
+            new THREE.CylinderGeometry(
+                .06,
+                .06,
+                .7,
+                12
+            ),
+            new THREE.MeshStandardMaterial({
+                color: 0x090909,
+                metalness: 1
+            })
         );
 
 
@@ -1048,90 +953,74 @@ function createPlayerGun() {
         Math.PI / 2;
 
 
-    barrel.position.z = -1;
-
-
-    gun.add(body);
-    gun.add(barrel);
-
-
-    gun.position.set(
+    barrel.position.set(
         .45,
-        -.45,
-        -.7
+        -.4,
+        -1.55
     );
 
 
-    camera.add(gun);
+    gun.add(gunBody);
 
+    gun.add(barrel);
+
+    camera.add(gun);
 }
 
 
-/* =========================
+/* ============================================================
    ENEMIES
-========================= */
+   ============================================================ */
 
-function createEnemies() {
+function spawnEnemies(amount) {
 
     for (
         let i = 0;
-        i < 12;
+        i < amount;
         i++
     ) {
 
-        createEnemy();
-
+        spawnEnemy();
     }
-
 }
 
 
-function createEnemy() {
+function spawnEnemy() {
 
     const enemy =
         new THREE.Group();
 
 
-    const bodyGeometry =
-        new THREE.BoxGeometry(
-            1.3,
-            2,
-            1
-        );
-
-
-    const bodyMaterial =
-        new THREE.MeshStandardMaterial({
-            color: 0x531c1c
-        });
-
-
     const body =
         new THREE.Mesh(
-            bodyGeometry,
-            bodyMaterial
+            new THREE.BoxGeometry(
+                1.2,
+                2,
+                1
+            ),
+            new THREE.MeshStandardMaterial({
+                color: 0x691e1e
+            })
         );
 
 
     body.position.y = 1;
 
 
-    const headGeometry =
-        new THREE.SphereGeometry(
-            .65,
-            12,
-            12
-        );
-
-
     const head =
         new THREE.Mesh(
-            headGeometry,
-            bodyMaterial
+            new THREE.SphereGeometry(
+                .6,
+                12,
+                12
+            ),
+            new THREE.MeshStandardMaterial({
+                color: 0x8e2929
+            })
         );
 
 
-    head.position.y = 2.5;
+    head.position.y = 2.4;
 
 
     enemy.add(body);
@@ -1139,138 +1028,165 @@ function createEnemy() {
 
 
     enemy.position.set(
-        (Math.random() - .5) * 220,
+        (Math.random() - .5) * 250,
         0,
-        (Math.random() - .5) * 220
+        (Math.random() - .5) * 250
     );
 
 
     enemy.userData.health = 100;
-    enemy.userData.speed =
-        1.2 + Math.random() * .8;
 
-    enemy.userData.attackCooldown = 0;
+    enemy.userData.speed =
+        1.5 + Math.random();
+
+    enemy.userData.attackTimer = 0;
 
 
     scene.add(enemy);
 
     enemies.push(enemy);
-
 }
 
 
-/* =========================
-   START GAME
-========================= */
+/* ============================================================
+   START
+   ============================================================ */
 
 function startGame() {
 
-    started = true;
+    gameStarted = true;
+
+    gamePaused = false;
+
+    playerDead = false;
+
 
     startScreen.style.display =
         "none";
 
-    requestPointerLock();
+    hud.style.display =
+        "block";
 
-}
-
-
-/* =========================
-   POINTER LOCK
-========================= */
-
-function requestPointerLock() {
-
-    if (!started || dead) return;
 
     renderer.domElement.requestPointerLock();
-
 }
 
 
-document.addEventListener(
-    "pointerlockchange",
-    function() {
+/* ============================================================
+   POINTER LOCK
+   ============================================================ */
 
-        if (
-            document.pointerLockElement ===
-            renderer.domElement
-        ) {
-
-            paused = false;
-            pauseScreen.style.display =
-                "none";
-
-        } else if (
-            started &&
-            !dead
-        ) {
-
-            paused = true;
-            pauseScreen.style.display =
-                "flex";
-
-        }
-
-    }
-);
-
-
-/* =========================
-   MOUSE LOOK
-========================= */
-
-function onMouseMove(event) {
+function pointerLockChanged() {
 
     if (
-        !started ||
-        paused ||
-        dead
+        !gameStarted ||
+        playerDead
     ) return;
 
 
-    yaw -= event.movementX * 0.002;
+    if (
+        document.pointerLockElement ===
+        renderer.domElement
+    ) {
 
-    pitch -= event.movementY * 0.002;
+        gamePaused = false;
+
+        pauseScreen.style.display =
+            "none";
+
+    } else {
+
+        gamePaused = true;
+
+        pauseScreen.style.display =
+            "flex";
+    }
+}
 
 
-    const limit =
-        Math.PI / 2 - .05;
+/* ============================================================
+   MOUSE
+   ============================================================ */
+
+function mouseMove(event) {
+
+    if (
+        !gameStarted ||
+        gamePaused ||
+        playerDead
+    ) return;
+
+
+    yaw -=
+        event.movementX * .002;
+
+
+    pitch -=
+        event.movementY * .002;
 
 
     pitch =
         Math.max(
-            -limit,
+            -1.45,
             Math.min(
-                limit,
+                1.45,
                 pitch
             )
         );
 
 
-    player.rotation.y = yaw;
+    player.rotation.y =
+        yaw;
 
-    camera.rotation.x = pitch;
-
+    camera.rotation.x =
+        pitch;
 }
 
 
-/* =========================
-   KEYBOARD
-========================= */
+/* ============================================================
+   MOUSE CLICK
+   ============================================================ */
 
-function onKeyDown(event) {
+function mouseDown(event) {
+
+    if (
+        !gameStarted ||
+        gamePaused ||
+        playerDead
+    ) return;
+
+
+    if (
+        event.button === 0
+    ) {
+
+        shoot();
+    }
+}
+
+
+/* ============================================================
+   KEYBOARD
+   ============================================================ */
+
+function keyDown(event) {
 
     keys[event.code] = true;
 
 
     if (
-        event.code === "Escape" &&
-        started &&
-        !dead
+        event.code === "KeyR"
     ) {
 
-        if (paused) {
+        reload();
+    }
+
+
+    if (
+        event.code === "Escape"
+    ) {
+
+        if (gamePaused) {
 
             resumeGame();
 
@@ -1279,81 +1195,69 @@ function onKeyDown(event) {
             pauseGame();
 
         }
-
     }
-
-
-    if (
-        event.code === "KeyR"
-    ) {
-
-        reload();
-
-    }
-
 }
 
 
-function onKeyUp(event) {
+function keyUp(event) {
 
     keys[event.code] = false;
-
 }
 
 
-/* =========================
+/* ============================================================
    MOVEMENT
-========================= */
+   ============================================================ */
 
 function updateMovement(delta) {
 
     if (
-        paused ||
-        dead
+        gamePaused ||
+        playerDead
     ) return;
 
 
     let forward = 0;
-    let sideways = 0;
+
+    let side = 0;
 
 
     if (keys["KeyW"])
-        forward += 1;
+        forward++;
 
     if (keys["KeyS"])
-        forward -= 1;
+        forward--;
 
     if (keys["KeyA"])
-        sideways -= 1;
+        side--;
 
     if (keys["KeyD"])
-        sideways += 1;
+        side++;
 
 
     const moving =
         forward !== 0 ||
-        sideways !== 0;
+        side !== 0;
 
 
     let speed = 7;
 
 
-    const sprinting =
+    if (
         keys["ShiftLeft"] &&
-        stamina > 0 &&
-        moving;
-
-
-    if (sprinting) {
+        moving &&
+        stamina > 0
+    ) {
 
         speed = 12;
 
-        stamina -= 30 * delta;
+        stamina -=
+            35 * delta;
 
     } else {
 
-        stamina += 20 * delta;
-
+        stamina +=
+            22 * delta;
     }
 
 
@@ -1367,36 +1271,38 @@ function updateMovement(delta) {
         );
 
 
-    if (moving) {
-
-        const direction =
-            new THREE.Vector3(
-                sideways,
-                0,
-                -forward
-            );
+    if (!moving)
+        return;
 
 
-        direction.normalize();
-
-
-        direction.applyAxisAngle(
-            new THREE.Vector3(0,1,0),
-            yaw
+    const direction =
+        new THREE.Vector3(
+            side,
+            0,
+            -forward
         );
 
 
-        player.position.addScaledVector(
-            direction,
-            speed * delta
-        );
-
-    }
+    direction.normalize();
 
 
-    /*
-    Keep player inside map.
-    */
+    direction.applyAxisAngle(
+        new THREE.Vector3(0,1,0),
+        yaw
+    );
+
+
+    player.position.x +=
+        direction.x *
+        speed *
+        delta;
+
+
+    player.position.z +=
+        direction.z *
+        speed *
+        delta;
+
 
     player.position.x =
         Math.max(
@@ -1416,75 +1322,53 @@ function updateMovement(delta) {
                 player.position.z
             )
         );
-
 }
 
 
-/* =========================
-   SHOOTING
-========================= */
-
-function onMouseDown(event) {
-
-    if (
-        event.button === 0
-    ) {
-
-        shoot();
-
-    }
-
-}
-
+/* ============================================================
+   SHOOT
+   ============================================================ */
 
 function shoot() {
 
     if (
-        !started ||
-        paused ||
-        dead ||
-        isReloading
+        shootTimer > 0 ||
+        reloading
     ) return;
 
 
-    if (ammo <= 0) {
+    if (
+        ammo <= 0
+    ) {
 
         reload();
 
         return;
-
     }
-
-
-    if (shootCooldown > 0)
-        return;
-
-
-    shootCooldown =
-        .15;
 
 
     ammo--;
 
-    updateAmmo();
+    shootTimer =
+        .15;
 
 
-    /*
-    Recoil.
-    */
-
-    camera.rotation.x -= .025;
+    updateHUD();
 
 
-    /*
-    Raycast from camera.
-    */
+    /* RECOIL */
 
-    const raycaster =
+    camera.rotation.x -=
+        .035;
+
+
+    /* RAY */
+
+    const ray =
         new THREE.Raycaster();
 
 
-    raycaster.setFromCamera(
+    ray.setFromCamera(
         new THREE.Vector2(0,0),
         camera
     );
@@ -1497,99 +1381,70 @@ function shoot() {
         enemy => {
 
             enemy.traverse(
-                child => {
+                object => {
 
                     if (
-                        child.isMesh
+                        object.isMesh
                     ) {
 
                         targets.push(
-                            child
+                            object
                         );
-
                     }
-
                 }
             );
-
         }
     );
 
 
     const hits =
-        raycaster.intersectObjects(
+        ray.intersectObjects(
             targets
         );
 
 
-    if (hits.length > 0) {
-
-        const hit =
-            hits[0].object;
-
-
-        let target =
-            hit.parent;
+    if (
+        hits.length === 0
+    ) return;
 
 
-        while (
-            target &&
-            !target.userData.health
-        ) {
+    let enemy =
+        hits[0].object;
 
-            target =
-                target.parent;
 
-        }
+    while (
+        enemy &&
+        enemy.parent &&
+        !enemy.userData.health
+    ) {
+
+        enemy =
+            enemy.parent;
+    }
+
+
+    if (
+        enemy &&
+        enemy.userData.health
+    ) {
+
+        enemy.userData.health -=
+            50;
 
 
         if (
-            target &&
-            target.userData.health
+            enemy.userData.health <= 0
         ) {
 
-            target.userData.health -= 50;
-
-            /*
-            Knockback.
-            */
-
-            const push =
-                new THREE.Vector3();
-
-            push.subVectors(
-                target.position,
-                player.position
-            );
-
-            push.y = 0;
-
-            push.normalize();
-
-            target.position.addScaledVector(
-                push,
-                1
-            );
-
-
-            if (
-                target.userData.health <= 0
-            ) {
-
-                killEnemy(target);
-
-            }
-
+            killEnemy(enemy);
         }
-
     }
-
 }
 
 
-/* =========================
+/* ============================================================
    KILL ENEMY
-========================= */
+   ============================================================ */
 
 function killEnemy(enemy) {
 
@@ -1597,84 +1452,285 @@ function killEnemy(enemy) {
         enemies.indexOf(enemy);
 
 
-    if (index !== -1) {
+    if (
+        index !== -1
+    ) {
 
         enemies.splice(
             index,
             1
         );
-
     }
 
 
     scene.remove(enemy);
 
 
-    /*
-    Spawn loot.
-    */
+    /* DROP LOOT */
 
-    const geometry =
-        new THREE.BoxGeometry(
-            .8,
-            .8,
-            .8
-        );
-
-
-    const material =
-        new THREE.MeshStandardMaterial({
-            color: 0xffb52e,
-            emissive: 0x5a2600
-        });
-
-
-    const loot =
+    const drop =
         new THREE.Mesh(
-            geometry,
-            material
+            new THREE.BoxGeometry(
+                .7,
+                .7,
+                .7
+            ),
+            new THREE.MeshStandardMaterial({
+                color: 0xffb52e,
+                emissive: 0x552000
+            })
         );
 
 
-    loot.position.copy(
+    drop.position.copy(
         enemy.position
     );
 
-    loot.position.y = .5;
+
+    drop.position.y =
+        .5;
 
 
-    loot.userData.loot = true;
+    drop.userData.type =
+        "health";
 
-    scene.add(loot);
 
-    crates.push(loot);
+    scene.add(drop);
 
+    loot.push(drop);
 }
 
 
-/* =========================
+/* ============================================================
+   ENEMY AI
+   ============================================================ */
+
+function updateEnemies(delta) {
+
+    if (
+        gamePaused ||
+        playerDead
+    ) return;
+
+
+    enemies.forEach(
+        enemy => {
+
+            const distance =
+                enemy.position.distanceTo(
+                    player.position
+                );
+
+
+            if (
+                distance < 45
+            ) {
+
+                const direction =
+                    new THREE.Vector3();
+
+
+                direction.subVectors(
+                    player.position,
+                    enemy.position
+                );
+
+
+                direction.y = 0;
+
+
+                if (
+                    direction.length() > 0
+                ) {
+
+                    direction.normalize();
+
+                    enemy.position.addScaledVector(
+                        direction,
+                        enemy.userData.speed *
+                        delta
+                    );
+
+                    enemy.lookAt(
+                        player.position.x,
+                        enemy.position.y,
+                        player.position.z
+                    );
+                }
+
+
+                enemy.userData.attackTimer -=
+                    delta;
+
+
+                if (
+                    distance < 2 &&
+                    enemy.userData.attackTimer <= 0
+                ) {
+
+                    enemy.userData.attackTimer =
+                        1;
+
+                    damagePlayer(10);
+                }
+            }
+        }
+    );
+}
+
+
+/* ============================================================
+   DAMAGE
+   ============================================================ */
+
+function damagePlayer(amount) {
+
+    if (playerDead)
+        return;
+
+
+    health -= amount;
+
+
+    if (
+        health < 0
+    ) {
+
+        health = 0;
+    }
+
+
+    damageScreen.style.opacity =
+        "1";
+
+
+    setTimeout(
+        function() {
+
+            damageScreen.style.opacity =
+                "0";
+
+        },
+        120
+    );
+
+
+    updateHUD();
+
+
+    if (
+        health <= 0
+    ) {
+
+        die();
+    }
+}
+
+
+/* ============================================================
+   LOOT
+   ============================================================ */
+
+function updateLoot() {
+
+    if (
+        gamePaused ||
+        playerDead
+    ) return;
+
+
+    for (
+        let i = loot.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const item =
+            loot[i];
+
+
+        if (
+            !item.parent
+        ) {
+
+            loot.splice(i,1);
+
+            continue;
+        }
+
+
+        const distance =
+            item.position.distanceTo(
+                player.position
+            );
+
+
+        if (
+            distance < 2
+        ) {
+
+            scene.remove(item);
+
+            loot.splice(i,1);
+
+
+            if (
+                item.userData.type ===
+                "health"
+            ) {
+
+                health =
+                    Math.min(
+                        100,
+                        health + 20
+                    );
+
+                showMessage(
+                    "+20 HEALTH"
+                );
+
+            } else {
+
+                reserveAmmo += 30;
+
+                showMessage(
+                    "+30 AMMO"
+                );
+            }
+
+
+            updateHUD();
+        }
+    }
+}
+
+
+/* ============================================================
    RELOAD
-========================= */
+   ============================================================ */
 
 function reload() {
 
     if (
-        isReloading ||
+        reloading ||
         ammo >= 12 ||
         reserveAmmo <= 0
     ) return;
 
 
-    isReloading = true;
+    reloading = true;
 
-    reloadTimer = 1.5;
+    reloadTimer = 1.3;
 
+    showMessage(
+        "RELOADING..."
+    );
 }
 
 
 function updateReload(delta) {
 
-    if (!isReloading)
+    if (!reloading)
         return;
 
 
@@ -1701,422 +1757,171 @@ function updateReload(delta) {
         reserveAmmo -= amount;
 
 
-        isReloading = false;
+        reloading = false;
 
-        updateAmmo();
-
+        updateHUD();
     }
-
 }
 
 
-/* =========================
-   AMMO UI
-========================= */
+/* ============================================================
+   MESSAGE
+   ============================================================ */
 
-function updateAmmo() {
+function showMessage(text) {
 
-    ammoCurrent.textContent =
-        ammo;
+    message.textContent =
+        text;
 
-}
-
-
-/* =========================
-   ENEMY AI
-========================= */
-
-function updateEnemies(delta) {
-
-    if (
-        paused ||
-        dead
-    ) return;
-
-
-    enemies.forEach(
-        enemy => {
-
-            const distance =
-                enemy.position.distanceTo(
-                    player.position
-                );
-
-
-            /*
-            Only chase nearby player.
-            */
-
-            if (
-                distance < 45
-            ) {
-
-                const direction =
-                    new THREE.Vector3()
-                        .subVectors(
-                            player.position,
-                            enemy.position
-                        );
-
-
-                direction.y = 0;
-
-                direction.normalize();
-
-
-                enemy.position.addScaledVector(
-                    direction,
-                    enemy.userData.speed *
-                    delta
-                );
-
-
-                enemy.lookAt(
-                    player.position.x,
-                    enemy.position.y,
-                    player.position.z
-                );
-
-
-                enemy.userData.attackCooldown -=
-                    delta;
-
-
-                if (
-                    distance < 2.2 &&
-                    enemy.userData.attackCooldown <= 0
-                ) {
-
-                    enemy.userData.attackCooldown =
-                        1.2;
-
-                    damagePlayer(
-                        10
-                    );
-
-                }
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================
-   DAMAGE PLAYER
-========================= */
-
-function damagePlayer(amount) {
-
-    if (dead)
-        return;
-
-
-    health -= amount;
-
-
-    health =
-        Math.max(
-            0,
-            health
-        );
-
-
-    healthBar.style.width =
-        health + "%";
-
-
-    damageFlash.style.opacity =
+    message.style.opacity =
         "1";
 
 
     setTimeout(
-        () => {
+        function() {
 
-            damageFlash.style.opacity =
-                "0";
-
-        },
-        120
-    );
-
-
-    if (
-        health <= 0
-    ) {
-
-        die();
-
-    }
-
-}
-
-
-/* =========================
-   LOOT
-========================= */
-
-function updateLoot() {
-
-    if (
-        paused ||
-        dead
-    ) return;
-
-
-    crates.forEach(
-        (crate, index) => {
-
-            if (
-                !crate.parent
-            ) return;
-
-
-            const distance =
-                crate.position.distanceTo(
-                    player.position
-                );
-
-
-            if (
-                distance < 2
-            ) {
-
-                /*
-                Collect.
-                */
-
-                scene.remove(crate);
-
-
-                showLootMessage();
-
-                /*
-                Small chance to restore health.
-                */
-
-                health =
-                    Math.min(
-                        100,
-                        health + 15
-                    );
-
-
-                healthBar.style.width =
-                    health + "%";
-
-
-                /*
-                Remove from array.
-                */
-
-                crates.splice(
-                    index,
-                    1
-                );
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================
-   LOOT MESSAGE
-========================= */
-
-function showLootMessage() {
-
-    lootMessage.textContent =
-        "+15 HEALTH";
-
-    lootMessage.style.opacity =
-        "1";
-
-
-    setTimeout(
-        () => {
-
-            lootMessage.style.opacity =
+            message.style.opacity =
                 "0";
 
         },
         1000
     );
-
 }
 
 
-/* =========================
-   DAY NIGHT
-========================= */
-
-function updateDayNight(delta) {
-
-    worldTime +=
-        delta * .015;
-
-
-    const cycle =
-        Math.sin(worldTime);
-
-
-    const brightness =
-        .5 + cycle * .5;
-
-
-    const sky =
-        new THREE.Color();
-
-
-    sky.setRGB(
-        .04 + brightness * .08,
-        .04 + brightness * .08,
-        .05 + brightness * .1
-    );
-
-
-    scene.background =
-        sky;
-
-
-    scene.fog.color =
-        sky;
-
-}
-
-
-/* =========================
-   SHOOT TIMER
-========================= */
-
-function updateShooting(delta) {
-
-    if (
-        shootCooldown > 0
-    ) {
-
-        shootCooldown -= delta;
-
-    }
-
-}
-
-
-/* =========================
+/* ============================================================
    HUD
-========================= */
+   ============================================================ */
 
 function updateHUD() {
 
-    healthBar.style.width =
+    healthFill.style.width =
         health + "%";
 
 
-    staminaBar.style.width =
+    staminaFill.style.width =
         stamina + "%";
 
 
-    ammoCurrent.textContent =
+    ammoNumber.textContent =
         ammo;
 
+
+    document.querySelector(
+        "#ammo small"
+    ).textContent =
+        "/ " + reserveAmmo;
 }
 
 
-/* =========================
+/* ============================================================
    PAUSE
-========================= */
+   ============================================================ */
 
 function pauseGame() {
 
-    paused = true;
+    if (
+        !gameStarted ||
+        playerDead
+    ) return;
+
+
+    gamePaused = true;
 
     pauseScreen.style.display =
         "flex";
 
-    document.exitPointerLock();
 
+    if (
+        document.pointerLockElement
+    ) {
+
+        document.exitPointerLock();
+    }
 }
 
 
 function resumeGame() {
 
-    paused = false;
+    if (
+        playerDead
+    ) return;
+
+
+    gamePaused = false;
 
     pauseScreen.style.display =
         "none";
 
-    requestPointerLock();
 
+    renderer.domElement.requestPointerLock();
 }
 
 
-/* =========================
+/* ============================================================
    FULLSCREEN
-========================= */
+   ============================================================ */
 
-function fullscreen() {
+function toggleFullscreen() {
 
     if (
         !document.fullscreenElement
     ) {
 
-        document.documentElement.requestFullscreen();
+        document.documentElement
+            .requestFullscreen()
+            .catch(
+                function(error) {
+                    console.log(
+                        "Fullscreen error:",
+                        error
+                    );
+                }
+            );
 
     } else {
 
         document.exitFullscreen();
-
     }
-
 }
 
 
-/* =========================
+/* ============================================================
    DEATH
-========================= */
+   ============================================================ */
 
 function die() {
 
-    dead = true;
+    playerDead = true;
 
-    paused = true;
+    gamePaused = true;
 
-    document.exitPointerLock();
 
-    deadScreen.style.display =
+    if (
+        document.pointerLockElement
+    ) {
+
+        document.exitPointerLock();
+    }
+
+
+    deathScreen.style.display =
         "flex";
-
 }
 
 
+/* ============================================================
+   RESTART
+   ============================================================ */
+
 function restartGame() {
 
-    /*
-    Reset player.
-    */
-
-    health = 100;
-
-    stamina = 100;
-
-    ammo = 12;
-
-    reserveAmmo = 120;
-
-    dead = false;
-
-    paused = false;
-
+    /* PLAYER */
 
     player.position.set(
         0,
         0,
-        10
+        15
     );
 
 
@@ -2129,45 +1934,100 @@ function restartGame() {
     camera.rotation.x = 0;
 
 
-    /*
-    Remove old enemies.
-    */
+    /* STATS */
 
-    enemies.forEach(
-        enemy => {
+    health = 100;
 
-            scene.remove(enemy);
+    stamina = 100;
 
-        }
-    );
+    ammo = 12;
+
+    reserveAmmo = 120;
 
 
-    enemies = [];
+    /* REMOVE ENEMIES */
+
+    for (
+        let i = enemies.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        scene.remove(
+            enemies[i]
+        );
+    }
 
 
-    /*
-    Spawn new enemies.
-    */
-
-    createEnemies();
+    enemies.length = 0;
 
 
-    deadScreen.style.display =
+    /* NEW ENEMIES */
+
+    spawnEnemies(10);
+
+
+    playerDead = false;
+
+    gamePaused = false;
+
+
+    deathScreen.style.display =
         "none";
 
 
     updateHUD();
 
-    requestPointerLock();
 
+    renderer.domElement.requestPointerLock();
 }
 
 
-/* =========================
-   RESIZE
-========================= */
+/* ============================================================
+   DAY / NIGHT
+   ============================================================ */
 
-function onResize() {
+function updateWorld(delta) {
+
+    worldTimer +=
+        delta * .02;
+
+
+    const light =
+        (Math.sin(worldTimer) + 1) / 2;
+
+
+    const r =
+        .025 + light * .06;
+
+    const g =
+        .025 + light * .06;
+
+    const b =
+        .035 + light * .08;
+
+
+    const color =
+        new THREE.Color(
+            r,
+            g,
+            b
+        );
+
+
+    scene.background =
+        color;
+
+    scene.fog.color =
+        color;
+}
+
+
+/* ============================================================
+   RESIZE
+   ============================================================ */
+
+function resize() {
 
     camera.aspect =
         window.innerWidth /
@@ -2181,13 +2041,12 @@ function onResize() {
         window.innerWidth,
         window.innerHeight
     );
-
 }
 
 
-/* =========================
-   MAIN LOOP
-========================= */
+/* ============================================================
+   GAME LOOP
+   ============================================================ */
 
 function animate() {
 
@@ -2204,8 +2063,8 @@ function animate() {
 
 
     if (
-        started &&
-        !dead
+        gameStarted &&
+        !playerDead
     ) {
 
         updateMovement(delta);
@@ -2216,12 +2075,18 @@ function animate() {
 
         updateReload(delta);
 
-        updateShooting(delta);
+        updateWorld(delta);
 
-        updateDayNight(delta);
+
+        if (
+            shootTimer > 0
+        ) {
+
+            shootTimer -= delta;
+        }
+
 
         updateHUD();
-
     }
 
 
@@ -2229,13 +2094,12 @@ function animate() {
         scene,
         camera
     );
-
 }
 
 
-/* =========================
-   START
-========================= */
+/* ============================================================
+   START EVERYTHING
+   ============================================================ */
 
 init();
 
